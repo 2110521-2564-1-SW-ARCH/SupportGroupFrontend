@@ -7,7 +7,7 @@ function App() {
   return (
     <Provider store={store}>
       <Router>
-        <Switch>{/* <Route exact path="/" component={HomeScreen} /> */}</Switch>
+        <Switch>{/* <Route exact path="/home" component={HomeScreen} /> */}</Switch>
       </Router>
     </Provider>
   );
