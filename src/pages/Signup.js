@@ -10,6 +10,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputBase from '@material-ui/core/InputBase';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import { makeStyles, useTheme, withStyles, alpha } from '@material-ui/core/styles';
 
 import ColorSchema from '../styles/color'
@@ -119,7 +120,7 @@ function Signup() {
     };
 
     const drawer = (
-        <div>
+        <div style={{ height: "90%" }}>
             <div className={classes.headerDrawer}>
                 Support
                 <br />
@@ -139,13 +140,13 @@ function Signup() {
                     <InputLabel className={classes.inputLabeL} shrink htmlFor="bootstrap-input">
                         Password
                     </InputLabel>
-                    <Input placeholder="Password" id="bootstrap-input" />
+                    <Input type="password" placeholder="Password" id="bootstrap-input" />
                 </FormControl>
                 <FormControl className={classes.margin}>
                     <InputLabel className={classes.inputLabeL} shrink htmlFor="bootstrap-input">
                         Confirm Password
                     </InputLabel>
-                    <Input placeholder="Confirm Password" id="bootstrap-input" />
+                    <Input type="password" placeholder="Confirm Password" id="bootstrap-input" />
                 </FormControl>
                 <br />
                 <Button variant="contained" className={classes.button}>
@@ -190,6 +191,9 @@ function Signup() {
                         }}
                     >
                         {drawer}
+                        <IconButton onClick={handleDrawerToggle}>
+                            <ChevronLeftIcon />
+                        </IconButton>
                     </Drawer>
                 </Hidden>
                 <Hidden smDown implementation="css">
