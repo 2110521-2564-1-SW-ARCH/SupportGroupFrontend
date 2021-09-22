@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux';
 
-import Signup from './pages/Signup';
+import Signup from './pages/signup';
+import Signin from './pages/signin';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={Signup} />
+          <Route exact path="/signin" component={Signin} />
         </Switch>
       </Router>
     </Provider>
