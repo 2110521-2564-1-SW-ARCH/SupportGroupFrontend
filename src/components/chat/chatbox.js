@@ -8,14 +8,14 @@ const useStyles = makeStyles(() =>
     createStyles({
         paper: {
             width: "350px",
-            height: "80vh",
+            height: "70vh",
             display: "flex",
             alignItems: "center",
             flexDirection: "column",
             position: "relative"
         },
         container: {
-            height: "80vh",
+            height: "70vh",
             display: "flex",
             alignItems: "center",
             justifyContent: "center"

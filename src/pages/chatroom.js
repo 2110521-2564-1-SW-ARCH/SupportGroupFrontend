@@ -48,7 +48,7 @@ function ChatRoom() {
     const main = (
         <div>
             <div style={{ position: "absolute", backgroundColor: ColorSchema.chatBackground, width: "100vw", height: "110vh", zIndex: -1 }} />
-            <div style={{ width: "80%", paddingTop: "15vh", margin: "auto", }}>
+            <div style={{ width: "80%", paddingTop: "15vh", marginVertical: "auto", marginLeft: "5%" }}>
                 <Box sx={{ flexGrow: 1 }}>
                     <Grid container spacing={12}>
                         <Grid item xs={4}>
