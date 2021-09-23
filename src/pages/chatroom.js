@@ -48,25 +48,25 @@ function ChatRoom() {
     const main = (
         <div>
             <div style={{ position: "absolute", backgroundColor: ColorSchema.chatBackground, width: "100vw", height: "110vh", zIndex: -1 }} />
-            <div style={{ width: "80%", paddingTop: "15vh", marginVertical: "auto", marginLeft: "5%" }}>
+            <div style={{ width: "80%", paddingTop: mobile ? "10vh" : "15vh", marginLeft: mobile ? "2vw" : "5%", }}>
                 <Box sx={{ flexGrow: 1 }}>
-                    <Grid container spacing={12}>
-                        <Grid item xs={4}>
+                    <Grid container spacing={mobile ? 0 : 12}>
+                        <Grid item xs={mobile ? 6 : 4}>
                             <AudioProfile />
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={mobile ? 6 : 4}>
                             <AudioProfile />
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={mobile ? 6 : 4}>
                             <AudioProfile />
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={mobile ? 6 : 4}>
                             <AudioProfile />
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={mobile ? 6 : 4}>
                             <AudioProfile />
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={mobile ? 6 : 4}>
                             <AudioProfile />
                         </Grid>
                     </Grid>

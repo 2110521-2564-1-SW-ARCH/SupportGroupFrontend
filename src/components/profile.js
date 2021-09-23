@@ -7,7 +7,7 @@ import Avatar from "@material-ui/core/Avatar";
 const useStyles = makeStyles(() =>
     createStyles({
         container: {
-            height: "70px",
+            height: "9vh",
             display: "flex",
             justifyContent: "space-evenly"
         },

@@ -19,7 +19,6 @@ const useStyles = makeStyles(() =>
 
 export const AudioProfile = ({ photoURL = "https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c", displayName = "anonymous" }) => {
     const classes = useStyles();
-
     return (
         <center>
             <div className={classes.container}>
