@@ -5,6 +5,7 @@ import store from './redux';
 
 import Signup from './pages/signup';
 import Signin from './pages/signin';
+import ChatRoom from './pages/chatroom';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Switch>
           <Route exact path="/" component={Signup} />
           <Route exact path="/signin" component={Signin} />
+          <Route exact path="/chat" component={ChatRoom} />
         </Switch>
       </Router>
     </Provider>
