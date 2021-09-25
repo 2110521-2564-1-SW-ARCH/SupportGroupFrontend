@@ -18,7 +18,6 @@ export const signUp = async (email, password) => {
     } catch (err) {
         return err
     }
-
 }
 
 export const signIn = async (email, password) => {

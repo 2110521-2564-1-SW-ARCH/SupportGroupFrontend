@@ -12,7 +12,6 @@ import { ReceiveMsgRequest, ChatMessage } from '../../chat_pb';
 import { ChatInput } from './chatinput';
 import { MessageLeft } from './message';
 
-
 const useStyles = makeStyles(() =>
   createStyles({
     paper: {

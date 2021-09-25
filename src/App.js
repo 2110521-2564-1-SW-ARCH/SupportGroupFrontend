@@ -9,8 +9,6 @@ import Signin from './pages/signin';
 import ChatRoom from './pages/chatroom';
 import Home from './pages/home';
 
-
-
 function App() {
   return (
     <Provider store={store}>
