@@ -14,7 +14,7 @@ function App() {
   return (
     <Provider store={store}>
       <Router>
-        <ToastContainer />
+        <ToastContainer position="top-left" />
         <Switch>
           <Route exact path="/" component={Signup} />
           <Route exact path="/signin" component={Signin} />
