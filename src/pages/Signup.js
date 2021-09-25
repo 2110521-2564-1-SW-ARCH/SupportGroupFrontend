@@ -7,6 +7,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 import { makeStyles, } from '@material-ui/core/styles';
 
+import { Link } from 'react-router-dom';
 import { signup } from "../redux/auth/action";
 
 import Layout from '../components/hoc/index';
@@ -83,44 +84,48 @@ function Signup() {
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const drawer = (
-        <div style={{ height: "90%" }}>
-            <div className={classes.headerDrawer}>
-                Support
-                <br />
-                Group
-            </div>
-            <div className={classes.headerDrawer} style={{ color: "white", fontWeight: "bold" }}>
-                Sign up
-            </div>
-            <center>
-                <FormControl className={classes.margin}>
-                    <InputLabel className={classes.inputLabeL} shrink htmlFor="bootstrap-input">
-                        Email
-                    </InputLabel>
-                    <Input onChange={(event) => setEmail(event.target.value)} placeholder="Email" id="bootstrap-input" />
-                </FormControl>
-                <FormControl className={classes.margin}>
-                    <InputLabel className={classes.inputLabeL} shrink htmlFor="bootstrap-input">
-                        Password
-                    </InputLabel>
-                    <Input onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Password" id="bootstrap-input" />
-                </FormControl>
-                <FormControl className={classes.margin}>
-                    <InputLabel className={classes.inputLabeL} shrink htmlFor="bootstrap-input">
-                        Confirm Password
-                    </InputLabel>
-                    <Input onChange={(event) => setConfirmPassword(event.target.value)} type="password" placeholder="Confirm Password" id="bootstrap-input" />
-                </FormControl>
-                <Button
-                    style={{ color: "black", marginTop: "15px" }}
-                    disabled={email === '' || password === '' || confirmPassword === '' || (password !== confirmPassword)}
-                    onClick={() => dispatch(signup({ email, password }))}
-                    variant="contained" className={classes.button}
-                >
-                    Sign up
+      <div style={{height: '90%'}}>
+        <div className={classes.headerDrawer}>
+          Support
+          <br />
+          Group
+        </div>
+        <div className={classes.headerDrawer} style={{color: 'white', fontWeight: 'bold'}}>
+          Sign up
+        </div>
+        <center>
+          <FormControl className={classes.margin}>
+            <InputLabel className={classes.inputLabeL} shrink htmlFor="bootstrap-input">
+              Email
+            </InputLabel>
+            <Input onChange={(event) => setEmail(event.target.value)} placeholder="Email" id="bootstrap-input" />
+          </FormControl>
+          <FormControl className={classes.margin}>
+            <InputLabel className={classes.inputLabeL} shrink htmlFor="bootstrap-input">
+              Password
+            </InputLabel>
+            <Input onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Password" id="bootstrap-input" />
+          </FormControl>
+          <FormControl className={classes.margin}>
+            <InputLabel className={classes.inputLabeL} shrink htmlFor="bootstrap-input">
+              Confirm Password
+            </InputLabel>
+            <Input onChange={(event) => setConfirmPassword(event.target.value)} type="password" placeholder="Confirm Password" id="bootstrap-input" />
+          </FormControl>
+          <Button
+            style={{color: 'black', marginTop: '15px'}}
+            disabled={email === '' || password === '' || confirmPassword === '' || password !== confirmPassword}
+            onClick={() => dispatch(signup({email, password}))}
+            variant="contained"
+            className={classes.button}>
+            Sign up
                 </Button>
-            </center>
-        </div >
+                <br/>
+          <span>
+            Already got an account? <Link to="signin">Sign in here.</Link>
+          </span>
+        </center>
+      </div>
     );
 
     const main = (
