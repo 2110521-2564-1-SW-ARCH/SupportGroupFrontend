@@ -1,4 +1,4 @@
-const AUTH_TOKEN = 'auth_token';
+const AUTH_TOKEN = 'token';
 const CURRENT_USER = 'current_user';
 const APPLE_ENV = 'apple_env';
 const LOCATION = 'location';

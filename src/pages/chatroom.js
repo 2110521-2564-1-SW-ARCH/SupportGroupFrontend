@@ -44,8 +44,6 @@ function ChatRoom() {
     // eslint-disable-next-line no-underscore-dangle
     const _username = email;
 
-    console.log(email);
-
     const user = new User();
     user.setId(Date.now());
     user.setName(_username);
@@ -57,15 +55,16 @@ function ChatRoom() {
 
       if (error === 1) {
         console.log(error, msg);
-        // setSubmitted(true);
         return err;
       }
-      // window.localStorage.setItem('username', _username.toString());
-      // setSubmitted(true);
       console.log(error, msg);
       return err;
     });
   };
+
+  useEffect(() => {
+    joinChatHandler();
+  }, []);
 
   const drawer = (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly' }}>
@@ -74,7 +73,7 @@ function ChatRoom() {
         <ChatBox client={client} />
       </div>
       <Divider />
-      <Profile />
+      <Profile photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c" displayName={email} />
     </div>
   );
 
@@ -117,9 +116,6 @@ function ChatRoom() {
           borderRadius: '25px',
         }}>
         <ImPhoneHangUp style={{ color: 'white', width: '50px', height: '30px' }} />
-      </Button>
-      <Button style={{ backgroundColor: 'white' }} onClick={joinChatHandler}>
-        join
       </Button>
     </div>
   );

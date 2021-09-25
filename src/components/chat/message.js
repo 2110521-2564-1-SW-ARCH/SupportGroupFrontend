@@ -118,7 +118,7 @@ const useStyles = makeStyles((theme) =>
 
 export const MessageLeft = ({ msg = "", time = "", photoURL = "", from = "anonymous" }) => {
     const classes = useStyles();
-    console.log(msg, time)
+    console.log(time);
     return (
         <>
             <div className={classes.messageRow}>

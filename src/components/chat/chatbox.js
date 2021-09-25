@@ -53,7 +53,7 @@ export const ChatBox = ({ client }) => {
       const msg = response.getMsg();
       const time = response.getTime();
       // console.log(response.toObject())
-      console.log(`sending friend msg: ${msg}`, `from: ${from}`);
+      // console.log(`sending friend msg: ${msg}`, `from: ${from}`);
 
       if (from === username) {
         setMsgList((oldArray) => [
