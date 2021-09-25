@@ -111,7 +111,12 @@ function Signup() {
                     </InputLabel>
                     <Input onChange={(event) => setConfirmPassword(event.target.value)} type="password" placeholder="Confirm Password" id="bootstrap-input" />
                 </FormControl>
-                <Button style={{ color: "black", marginTop: "15px" }} disabled={email === '' || password === '' || confirmPassword === '' || (password !== confirmPassword)} onClick={() => dispatch(signup({ email, password }))} variant="contained" className={classes.button}>
+                <Button
+                    style={{ color: "black", marginTop: "15px" }}
+                    disabled={email === '' || password === '' || confirmPassword === '' || (password !== confirmPassword)}
+                    onClick={() => dispatch(signup({ email, password }))}
+                    variant="contained" className={classes.button}
+                >
                     Sign up
                 </Button>
             </center>
