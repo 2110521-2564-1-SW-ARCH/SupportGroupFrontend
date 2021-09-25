@@ -7,6 +7,7 @@ import Avatar from "@material-ui/core/Avatar";
 const useStyles = makeStyles(() =>
     createStyles({
         container: {
+            resize: "none",
             width: "20vw",
             height: "30vh",
         },
@@ -23,7 +24,7 @@ export const AudioProfile = ({ photoURL = "https://lh3.googleusercontent.com/a-/
         <center>
             <div className={classes.container}>
                 <Avatar
-                    style={{ width: "20vh", height: "20vh" }}
+                    style={{ width: "20vh", height: "20vh", minHeight: "150px", minWidth: "150px" }}
                     alt={displayName}
                     className={classes.orange}
                     src={photoURL}

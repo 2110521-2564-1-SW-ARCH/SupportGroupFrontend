@@ -7,6 +7,7 @@ import { deepOrange } from "@material-ui/core/colors";
 const useStyles = makeStyles((theme) =>
     createStyles({
         messageRow: {
+            marginLeft: "10px",
             display: "flex"
         },
         messageRowRight: {
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme) =>
             marginBottom: "10px",
             padding: "10px",
             backgroundColor: "#A8DDFD",
-            width: "60%",
+            width: "80%",
             // height: "50px",
             textAlign: "left",
             font: "400 .9em 'Open Sans', sans-serif",
@@ -93,7 +94,7 @@ const useStyles = makeStyles((theme) =>
             fontSize: ".85em",
             fontWeight: "300",
             marginTop: "10px",
-            bottom: "-3px",
+            bottom: "-1px",
             right: "5px"
         },
 
@@ -115,23 +116,24 @@ const useStyles = makeStyles((theme) =>
     })
 );
 
-export const MessageLeft = ({ message = "no message", timestamp = "", photoURL = "", displayName = "anonymouse" }) => {
+export const MessageLeft = ({ msg = "", time = "", photoURL = "", from = "anonymous" }) => {
     const classes = useStyles();
+    console.log(msg, time)
     return (
         <>
             <div className={classes.messageRow}>
                 <Avatar
-                    alt={displayName}
+                    alt={from}
                     className={classes.orange}
                     src={photoURL}
                 />
                 <div>
-                    <div className={classes.displayName}>{displayName}</div>
+                    <div className={classes.displayName}>{from}</div>
                     <div className={classes.messageBlue}>
                         <div>
-                            <p className={classes.messageContent}>{message}</p>
+                            <p className={classes.messageContent}>{msg}</p>
                         </div>
-                        <div className={classes.messageTimeStampRight}>{timestamp}</div>
+                        {/* <div className={classes.messageTimeStampRight}>{time}</div> */}
                     </div>
                 </div>
             </div>
@@ -140,8 +142,8 @@ export const MessageLeft = ({ message = "no message", timestamp = "", photoURL =
 };
 
 MessageLeft.propTypes = {
-    message: PropTypes.string.isRequired,
-    timestamp: PropTypes.string.isRequired,
+    msg: PropTypes.string.isRequired,
+    time: PropTypes.string.isRequired,
     photoURL: PropTypes.string.isRequired,
-    displayName: PropTypes.string.isRequired,
+    from: PropTypes.string.isRequired,
 }

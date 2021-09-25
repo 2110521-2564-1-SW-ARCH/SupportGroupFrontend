@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -17,9 +18,15 @@ function Signin() {
     const classes = useStyles();
 
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const handleClick = () => {
+        dispatch(signin({ email, password }));
+        history.push("/chat");
+    }
 
     const drawer = (
         <div style={{ height: "90%" }}>
@@ -41,7 +48,7 @@ function Signin() {
                     </InputLabel>
                     <Input onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Password" id="bootstrap-input" />
                 </FormControl>
-                <Button disabled={email === '' || password === ''} onClick={() => dispatch(signin({ email, password }))} variant="contained" className={classes.button}>
+                <Button style={{ color: "black" }} disabled={email === '' || password === ''} onClick={() => handleClick()} variant="contained" className={classes.button}>
                     Sign in
                 </Button>
             </div>

@@ -1,10 +1,17 @@
-import {React, useState ,useEffect} from 'react';
-import {createStyles, makeStyles} from '@material-ui/core/styles';
-import {Paper} from '@material-ui/core';
+import {
+  React,
+  useState,
+  useEffect
+} from 'react';
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { Paper } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import {ReceiveMsgRequest, ChatMessage} from '../../chat_pb';
-import {ChatInput} from './chatinput';
-import {MessageLeft} from './message';
+import { useSelector } from 'react-redux'
+
+import { ReceiveMsgRequest, ChatMessage } from '../../chat_pb';
+import { ChatInput } from './chatinput';
+import { MessageLeft } from './message';
+
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -31,22 +38,22 @@ const useStyles = makeStyles(() =>
   }),
 );
 
-export const ChatBox = ({client}) => {
+export const ChatBox = ({ client }) => {
   const classes = useStyles();
   const [msgList, setMsgList] = useState([]);
-  const username = window.localStorage.getItem("username");
+  const username = useSelector((state) => state.auth.email)
 
   useEffect(() => {
     const strRq = new ReceiveMsgRequest();
     strRq.setUser(username);
-    
+
     const chatStream = client.receiveMsg(strRq, {});
     chatStream.on("data", (response) => {
       const from = response.getFrom();
       const msg = response.getMsg();
       const time = response.getTime();
-      console.log(response.toObject())
-      console.log(`sending friend msg: ${  msg}`, `from: ${  from}`);
+      // console.log(response.toObject())
+      console.log(`sending friend msg: ${msg}`, `from: ${from}`);
 
       if (from === username) {
         setMsgList((oldArray) => [
@@ -73,20 +80,18 @@ export const ChatBox = ({client}) => {
     msg.setMsg(message);
     msg.setFrom(username);
     msg.setTime(new Date().toLocaleString());
-    console.log(message)
     client.sendMsg(msg, null, (err, response) => {
       console.log(response);
     });
   }
-
   return (
     <div className={classes.container}>
       <Paper className={classes.paper} zdepth={2}>
         <Paper id="style-1" className={classes.messagesBody}>
-          {msgList?.map((chat, i) => (
+          {msgList?.map((chat, i) => {
             // eslint-disable-next-line react/no-array-index-key
-            <MessageLeft message={chat} key={i}/>
-          ))}
+            return < MessageLeft {...chat} key={i} />;
+          })}
           {/* <MessageLeft
             message="あめんぼあかいなあいうえお"
             timestamp="MM/DD 00:00"
@@ -101,7 +106,7 @@ export const ChatBox = ({client}) => {
 };
 
 ChatBox.propTypes = {
-//   msgList: PropTypes.array.isRequired,
-//   sendMessage: PropTypes.func.isRequired,
+  //   msgList: PropTypes.array.isRequired,
+  //   sendMessage: PropTypes.func.isRequired,
   client: PropTypes.any.isRequired,
 };
