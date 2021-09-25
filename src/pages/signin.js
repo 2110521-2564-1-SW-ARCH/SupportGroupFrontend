@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -29,30 +29,36 @@ function Signin() {
     }
 
     const drawer = (
-        <div style={{ height: "90%" }}>
-            <div className={classes.headerDrawer}>
-                Support
-                <br />
-                Group
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", }}>
-                <FormControl className={classes.margin}>
-                    <InputLabel className={classes.inputLabeL} shrink>
-                        Email
-                    </InputLabel>
-                    <Input onChange={(event) => setEmail(event.target.value)} placeholder="Email" id="bootstrap-input" />
-                </FormControl>
-                <FormControl className={classes.margin}>
-                    <InputLabel className={classes.inputLabeL} shrink>
-                        Password
-                    </InputLabel>
-                    <Input onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Password" id="bootstrap-input" />
-                </FormControl>
-                <Button style={{ color: "black" }} disabled={email === '' || password === ''} onClick={() => handleClick()} variant="contained" className={classes.button}>
-                    Sign in
-                </Button>
-            </div>
-        </div >
+      <div style={{height: '90%'}}>
+        <div className={classes.headerDrawer}>
+          Support
+          <br />
+          Group
+        </div>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          <FormControl className={classes.margin}>
+            <InputLabel className={classes.inputLabeL} shrink>
+              Email
+            </InputLabel>
+            <Input onChange={(event) => setEmail(event.target.value)} placeholder="Email" id="bootstrap-input" />
+          </FormControl>
+          <FormControl className={classes.margin}>
+            <InputLabel className={classes.inputLabeL} shrink>
+              Password
+            </InputLabel>
+            <Input onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Password" id="bootstrap-input" />
+          </FormControl>
+          <Button
+            style={{color: 'black'}}
+            disabled={email === '' || password === ''}
+            onClick={() => handleClick()}
+            variant="contained"
+            className={classes.button}>
+            Sign in
+            </Button>
+            <span> No account? <Link to=''>Sing up here.</Link> </span>
+        </div>
+      </div>
     );
 
     const main = (
