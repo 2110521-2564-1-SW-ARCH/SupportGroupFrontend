@@ -116,7 +116,7 @@ const useStyles = makeStyles((theme) =>
     })
 );
 
-export const MessageLeft = ({ msg = "", time = "", photoURL = "https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c", from = "anonymous" }) => {
+export const MessageLeft = ({ msg = "", time = "", photoURL = "", from = "anonymous" }) => {
     const classes = useStyles();
     console.log(time);
     return (

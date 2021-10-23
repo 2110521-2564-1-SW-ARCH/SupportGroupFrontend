@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 40,
         paddingLeft: 30,
         paddingTop: 20,
-        fontWeight: "bold",
+        fontWeight: "bold"
     },
     margin: {
         margin: theme.spacing(1),
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     inputLabeL: {
         fontSize: 20,
         fontWeight: "bold"
-    },
+    }
 }));
 
 export { useStyles }
