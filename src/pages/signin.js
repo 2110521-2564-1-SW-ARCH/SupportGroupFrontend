@@ -22,7 +22,7 @@ function Signin() {
       toast.error('Signin failed');
     }
     if (token) {
-      history.push('/chat');
+      history.push('/chat/123');
     }
   }, [error, token]);
 
