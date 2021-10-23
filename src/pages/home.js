@@ -1,13 +1,14 @@
 /* eslint-disable no-unused-vars */
-import React, {useEffect, useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {useDispatch} from 'react-redux';
 
-import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 
-import clientSocket from 'socket.io-client';
 import {useStyles} from '../styles/styles';
 
 import {signin} from '../redux/auth/action';
@@ -24,7 +25,7 @@ function Home() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const [category, setCategory] = useState('');
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
@@ -33,8 +34,26 @@ function Home() {
     });
   });
 
-  const handleSend = async () => {
-    fetch('http://localhost:5555/api/queue', {method: 'GET'});
+  const handleCategory = (event) => {
+    setCategory(event.target.value);
+  };
+
+  const handleSearchRoom = async (event) => {
+    // fetch('http://localhost:5555/api/queue', {method: 'GET'});
+    event.preventDefault();
+    try {
+      const params = new URLSearchParams();
+      params.append('category', category);
+      const res = await fetch('http://localhost:5555/api/queue', {
+        method: 'POST',
+        body: params,
+      });
+      const response = await res.json();
+      const message = await response.message;
+      console.log(message);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const drawer = (
@@ -44,20 +63,35 @@ function Home() {
         <br />
         Group
       </div>
-      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <Button onClick={handleSend}>Find room</Button>
-        {socket || ''}
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'space-between', justifyContent: 'center', height: '50%', margin: '10px'}}>
+        <FormControl variant="standard">
+          <InputLabel id="demo-simple-select-standard-label" style={{margin: '10px', fontWeight: 'bold', fontSize: '20px'}}>
+            Category
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-standard-label"
+            id="demo-simple-select-standard"
+            value={category}
+            onChange={handleCategory}
+            label="Category"
+            style={{backgroundColor: 'white', borderRadius: '5px', margin: '10px', paddingLeft: '10px'}}>
+            <MenuItem value={1}>First</MenuItem>
+            <MenuItem value={2}>Second</MenuItem>
+            <MenuItem value={3}>Third</MenuItem>
+            <MenuItem value={4}>Other</MenuItem>
+          </Select>
+          <Button variant="contained" onClick={handleSearchRoom} style={{margin: '10px', borderRadius: '5px'}}>
+            join room
+          </Button>
+          {socket || ''}
+        </FormControl>
       </div>
     </div>
   );
 
   const main = (
     <>
-      <img
-        style={{height: '105vh', zIndex: -1, filter: 'grayscale(20%)'}}
-        src="https://s3-alpha-sig.figma.com/img/becd/b85e/2d68f0d0d3bc8944d250e65ec0432678?Expires=1632700800&Signature=fO8~tgADk7CmcaCJhPeP5wTMPUVKzMbnKet2u0Tz2ikt7MTKliF0J32H4jQStHr6YqSDAjZ6OnVrLBuHeKbo16ShSJethXF7HRDHiw9dYIeyowabyW9D5w83veSkcBRzj9XRhNV~-MuwT4H8h-Yt3vEjW6uM-FC-8ybmu9yLDhHzhoF3nu9UAPlUFelDga3GkK5pR~nQPe1xAoqpwV99ClcdSnMWRZZCJVipYSJ5OxFxRkz-moUKjx4nMC-NyuR4r5UFYt1~OgXi53jBQP5KwaMcupcFuxw1wiKQqdswLcQFXFRK23AloZb6TRndT4GvMGsxPBQ0BmJXmKuRSRFooQ__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA"
-        alt="Support Group"
-      />
+      <img style={{height: '105vh', zIndex: -1, filter: 'grayscale(20%)'}} src="/support-group.jpeg" alt="Support Group" />
       <div style={{position: 'absolute', left: '50%', top: '40vh', transform: 'translate(-50%, -50%)', color: 'white', fontSize: 80}}>test</div>
     </>
   );
