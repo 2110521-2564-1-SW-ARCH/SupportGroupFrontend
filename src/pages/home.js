@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {useDispatch} from 'react-redux';
 
@@ -7,12 +7,15 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 
+import clientSocket from 'socket.io-client';
 import {useStyles} from '../styles/styles';
 
 import {signin} from '../redux/auth/action';
 
 import Layout from '../components/hoc/index';
 import Input from '../components/input';
+
+import {subscribe} from '../utils/socket-api';
 
 function Home() {
   const classes = useStyles();
@@ -22,6 +25,18 @@ function Home() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    subscribe((result) => {
+      setSocket(result);
+    });
+  });
+
+  const handleSend = async () => {
+    fetch('http://localhost:5555/api/queue', {method: 'GET'});
+  };
+
   const drawer = (
     <div style={{height: '90%'}}>
       <div className={classes.headerDrawer}>
@@ -30,25 +45,8 @@ function Home() {
         Group
       </div>
       <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        {/* <FormControl className={classes.margin}>
-          <InputLabel className={classes.inputLabeL} shrink>
-            Email
-          </InputLabel>
-          <Input onChange={(event) => setEmail(event.target.value)} placeholder="Email" id="bootstrap-input" />
-        </FormControl>
-        <FormControl className={classes.margin}>
-          <InputLabel className={classes.inputLabeL} shrink>
-            Password
-          </InputLabel>
-          <Input onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Password" id="bootstrap-input" />
-        </FormControl>
-        <Button
-          disabled={email === '' || password === ''}
-          onClick={() => dispatch(signin({email, password}))}
-          variant="contained"
-          className={classes.button}>
-          Sign in
-        </Button> */}
+        <Button onClick={handleSend}>Find room</Button>
+        {socket || ''}
       </div>
     </div>
   );
