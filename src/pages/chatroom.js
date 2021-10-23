@@ -3,14 +3,38 @@ import io from 'socket.io-client';
 import Peer from 'simple-peer';
 import * as Chance from 'chance';
 
+import { useSelector } from 'react-redux'
+
+import Divider from '@mui/material/Divider';
+import Button from '@material-ui/core/Button';
+import { ImPhoneHangUp } from 'react-icons/im';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+
+import { useStyles } from '../styles/styles';
+import ColorSchema from '../styles/color';
+
+import Layout from '../components/hoc/index';
+
+import { ChatBox } from '../components/chat/chatbox';
+import { Profile } from '../components/profile';
+import { AudioProfile } from '../components/audio/audioprofile';
+
 import Video from '../components/video';
+
+import { User } from '../chat_pb';
+import { ChatServiceClient } from '../chat_grpc_web_pb';
 
 const chance = new Chance();
 
+export const client = new ChatServiceClient('http://localhost:8080', null, null);
+
 const ChatRoom = (props) => {
+  const classes = useStyles();
+  const email = useSelector((state) => state.auth.email)
   const [userDetails, setUserDetails] = useState({
     id: chance.guid(),
-    name: chance.name(),
+    name: email,
   });
   const [peers, setPeers] = useState([]);
 
@@ -19,7 +43,17 @@ const ChatRoom = (props) => {
   const peersRef = useRef([]);
 
   const roomId = props.match.params.roomId;
-
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth < 960) {
+        setMobile(true);
+      } else {
+        setMobile(false);
+      }
+    }
+    window.addEventListener('resize', handleResize);
+  });
 
   function createPeer(userToSignal, callerId, stream) {
     const peer = new Peer({
@@ -57,11 +91,11 @@ const ChatRoom = (props) => {
 
   useEffect(() => {
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
+      .getUserMedia({ video: false, audio: true })
       .then((stream) => {
         refVideo.current.srcObject = stream;
 
-        socketRef.current = io("http://localhost:5000");
+        socketRef.current = io.connect("http://localhost:5000");
 
         // sending the user details and roomid to join in the room
         socketRef.current.emit('join-room', roomId, userDetails);
@@ -129,23 +163,88 @@ const ChatRoom = (props) => {
       });
   }, []);
 
-  return (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <video muted ref={refVideo} autoPlay playsInline />
-        <span>{userDetails.name}</span>
+  const joinChatHandler = () => {
+    const _username = email;
+
+    const user = new User();
+    user.setId(Date.now());
+    user.setName(_username);
+
+    client.join(user, null, (err, response) => {
+      if (err) return console.log(err);
+      const error = response.getError();
+      const msg = response.getMsg();
+
+      if (error === 1) {
+        console.log(error, msg);
+        return err;
+      }
+      console.log(error, msg);
+      return err;
+    });
+  };
+
+  useEffect(() => {
+    joinChatHandler();
+  }, []);
+
+  const drawer = (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly' }}>
+      <div className={classes.headerDrawer}>Chat</div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <ChatBox client={client} />
       </div>
-      {peers.map((peer, index) => {
-        return (
-          <Video
-            key={peersRef.current[index].peerId}
-            peer={peer.peerObj}
-            name={peersRef.current[index].name}
-          />
-        );
-      })}
+      <Divider />
+      <Profile photoURL="https://lh3.googleusercontent.com/a-/AOh14Gi4vkKYlfrbJ0QLJTg_DLjcYyyK7fYoWRpz2r4s=s96-c" displayName={email} />
     </div>
   );
+
+  const main = (
+    <div>
+      <div style={{ position: 'absolute', backgroundColor: ColorSchema.chatBackground, width: '100vw', height: '110vh', zIndex: -1 }} />
+      <div style={{ width: '80%', paddingTop: mobile ? '10vh' : '15vh', marginLeft: mobile ? '2vw' : '5%' }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={mobile ? 0 : 12}>
+            <Grid item xs={mobile ? 6 : 4}>
+              <AudioProfile displayName={email} />
+            </Grid>
+
+            {peers.map((peer, index) => {
+              return (
+                <Grid item xs={mobile ? 6 : 4}>
+                  <Video
+                    key={peersRef.current[index].peerId}
+                    peer={peer.peerObj}
+                    name={peersRef.current[index].name}
+                  />
+                </Grid>
+              );
+            })}
+            <div style={{
+              position: "absolute"
+            }}>
+              <video muted ref={refVideo} autoPlay playsInline />
+            </div>
+          </Grid>
+        </Box>
+      </div>
+      <Button
+        style={{
+          position: 'absolute',
+          left: mobile ? '91%' : '93%',
+          top: '93%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'red',
+          width: '75px',
+          height: '50px',
+          borderRadius: '25px',
+        }}>
+        <ImPhoneHangUp style={{ color: 'white', width: '50px', height: '30px' }} />
+      </Button>
+    </div>
+  );
+
+  return <Layout drawer={drawer}>{main}</Layout>;
 };
 
 export default ChatRoom;

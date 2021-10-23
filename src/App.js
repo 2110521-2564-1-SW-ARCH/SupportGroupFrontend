@@ -1,29 +1,20 @@
-import './App.css';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import {Provider} from 'react-redux';
-import {ToastContainer} from 'react-toastify';
-import store from './redux';
-import PrivateRoute from './routes/private-route';
+import React from 'react';
+import { Provider } from 'react-redux';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Signup from './pages/signup';
 import Signin from './pages/signin';
-import ChatRoom from './pages/chatroom';
-import Home from './pages/home';
-import 'react-toastify/dist/ReactToastify.css';
+import Chatroom from './pages/chatroom'
+import store from './redux';
 
-function App() {
-  return (
-    <Provider store={store}>
-      <Router>
-        <ToastContainer position="top-left" />
-        <Switch>
-          <Route exact path="/" component={Signup} />
-          <Route exact path="/signin" component={Signin} />
-          <PrivateRoute exact path="/chat" component={ChatRoom} />
-          <PrivateRoute exact path="/home" component={Home} />
-        </Switch>
-      </Router>
-    </Provider>
-  );
-}
+const App = () => (
+  <Provider store={store}>
+    <BrowserRouter>
+      <Switch>
+        <Route path='/' exact component={Signin} />
+        <Route path='/chat/:roomId' component={Chatroom} />
+      </Switch>
+    </BrowserRouter>
+  </Provider>
+);
 
 export default App;

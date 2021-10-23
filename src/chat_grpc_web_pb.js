@@ -20,7 +20,7 @@ const proto = require('./chat_pb.js');
 /**
  * @param {string} hostname
  * @param {?Object} credentials
- * @param {?Object} options
+ * @param {?grpc.web.ClientOptions} options
  * @constructor
  * @struct
  * @final
@@ -28,7 +28,7 @@ const proto = require('./chat_pb.js');
 proto.ChatServiceClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
-  options['format'] = 'text';
+  options.format = 'text';
 
   /**
    * @private @const {!grpc.web.GrpcWebClientBase} The client
@@ -46,7 +46,7 @@ proto.ChatServiceClient =
 /**
  * @param {string} hostname
  * @param {?Object} credentials
- * @param {?Object} options
+ * @param {?grpc.web.ClientOptions} options
  * @constructor
  * @struct
  * @final
@@ -54,7 +54,7 @@ proto.ChatServiceClient =
 proto.ChatServicePromiseClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
-  options['format'] = 'text';
+  options.format = 'text';
 
   /**
    * @private @const {!grpc.web.GrpcWebClientBase} The client
@@ -92,30 +92,11 @@ const methodDescriptor_ChatService_join = new grpc.web.MethodDescriptor(
 
 
 /**
- * @const
- * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.User,
- *   !proto.JoinResponse>}
- */
-const methodInfo_ChatService_join = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.JoinResponse,
-  /**
-   * @param {!proto.User} request
-   * @return {!Uint8Array}
-   */
-  function(request) {
-    return request.serializeBinary();
-  },
-  proto.JoinResponse.deserializeBinary
-);
-
-
-/**
  * @param {!proto.User} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.JoinResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.JoinResponse)}
  *     callback The callback function(error, response)
  * @return {!grpc.web.ClientReadableStream<!proto.JoinResponse>|undefined}
  *     The XHR Node Readable Stream
@@ -134,7 +115,7 @@ proto.ChatServiceClient.prototype.join =
 /**
  * @param {!proto.User} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {?Object<string, string>=} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.JoinResponse>}
  *     Promise that resolves to the response
@@ -172,30 +153,11 @@ const methodDescriptor_ChatService_sendMsg = new grpc.web.MethodDescriptor(
 
 
 /**
- * @const
- * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.ChatMessage,
- *   !proto.Empty>}
- */
-const methodInfo_ChatService_sendMsg = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.Empty,
-  /**
-   * @param {!proto.ChatMessage} request
-   * @return {!Uint8Array}
-   */
-  function(request) {
-    return request.serializeBinary();
-  },
-  proto.Empty.deserializeBinary
-);
-
-
-/**
  * @param {!proto.ChatMessage} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.Empty)}
+ * @param {function(?grpc.web.RpcError, ?proto.Empty)}
  *     callback The callback function(error, response)
  * @return {!grpc.web.ClientReadableStream<!proto.Empty>|undefined}
  *     The XHR Node Readable Stream
@@ -214,7 +176,7 @@ proto.ChatServiceClient.prototype.sendMsg =
 /**
  * @param {!proto.ChatMessage} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {?Object<string, string>=} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.Empty>}
  *     Promise that resolves to the response
@@ -252,27 +214,8 @@ const methodDescriptor_ChatService_receiveMsg = new grpc.web.MethodDescriptor(
 
 
 /**
- * @const
- * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.Empty,
- *   !proto.ChatMessage>}
- */
-const methodInfo_ChatService_receiveMsg = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.ChatMessage,
-  /**
-   * @param {!proto.Empty} request
-   * @return {!Uint8Array}
-   */
-  function(request) {
-    return request.serializeBinary();
-  },
-  proto.ChatMessage.deserializeBinary
-);
-
-
-/**
  * @param {!proto.Empty} request The request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {?Object<string, string>=} metadata User defined
  *     call metadata
  * @return {!grpc.web.ClientReadableStream<!proto.ChatMessage>}
  *     The XHR Node Readable Stream
@@ -289,7 +232,7 @@ proto.ChatServiceClient.prototype.receiveMsg =
 
 /**
  * @param {!proto.Empty} request The request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {?Object<string, string>=} metadata User defined
  *     call metadata
  * @return {!grpc.web.ClientReadableStream<!proto.ChatMessage>}
  *     The XHR Node Readable Stream
@@ -327,30 +270,11 @@ const methodDescriptor_ChatService_getAllUsers = new grpc.web.MethodDescriptor(
 
 
 /**
- * @const
- * @type {!grpc.web.AbstractClientBase.MethodInfo<
- *   !proto.Empty,
- *   !proto.UserList>}
- */
-const methodInfo_ChatService_getAllUsers = new grpc.web.AbstractClientBase.MethodInfo(
-  proto.UserList,
-  /**
-   * @param {!proto.Empty} request
-   * @return {!Uint8Array}
-   */
-  function(request) {
-    return request.serializeBinary();
-  },
-  proto.UserList.deserializeBinary
-);
-
-
-/**
  * @param {!proto.Empty} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.Error, ?proto.UserList)}
+ * @param {function(?grpc.web.RpcError, ?proto.UserList)}
  *     callback The callback function(error, response)
  * @return {!grpc.web.ClientReadableStream<!proto.UserList>|undefined}
  *     The XHR Node Readable Stream
@@ -369,7 +293,7 @@ proto.ChatServiceClient.prototype.getAllUsers =
 /**
  * @param {!proto.Empty} request The
  *     request proto
- * @param {?Object<string, string>} metadata User defined
+ * @param {?Object<string, string>=} metadata User defined
  *     call metadata
  * @return {!Promise<!proto.UserList>}
  *     Promise that resolves to the response

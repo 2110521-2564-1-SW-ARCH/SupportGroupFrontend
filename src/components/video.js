@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { AudioProfile } from '../components/audio/audioprofile';
 
 const Video = ({ peer, name }) => {
     const refVideo = useRef(null);
@@ -14,10 +15,10 @@ const Video = ({ peer, name }) => {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <video autoPlay ref={refVideo} playsInline>
+            <video style={{ position: "absolute" }} autoPlay ref={refVideo} playsInline>
                 <track kind="captions" />
             </video>
-            <span>{name}</span>
+            <AudioProfile displayName={name} />
         </div>
     );
 };
