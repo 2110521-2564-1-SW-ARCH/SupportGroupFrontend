@@ -1,7 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import io from 'socket.io-client';
 import Peer from 'simple-peer';
 import * as Chance from 'chance';
+import PropTypes from "prop-types";
+import { useHistory } from 'react-router-dom';
 
 import { useSelector } from 'react-redux'
 
@@ -29,20 +31,24 @@ const chance = new Chance();
 
 export const client = new ChatServiceClient('http://localhost:8080', null, null);
 
-const ChatRoom = (props) => {
+const ChatRoom = ({ match: { params: roomId } }) => {
   const classes = useStyles();
+
+  const history = useHistory();
+  const handleOnClick = useCallback(() => history.push('/'), [history]);
+
   const email = useSelector((state) => state.auth.email)
-  const [userDetails, setUserDetails] = useState({
+
+  const userDetails = {
     id: chance.guid(),
     name: email,
-  });
+  };
   const [peers, setPeers] = useState([]);
 
   const socketRef = useRef();
   const refVideo = useRef();
   const peersRef = useRef([]);
 
-  const roomId = props.match.params.roomId;
   const [mobile, setMobile] = useState(false);
   useEffect(() => {
     function handleResize() {
@@ -211,7 +217,7 @@ const ChatRoom = (props) => {
 
             {peers.map((peer, index) => {
               return (
-                <Grid item xs={mobile ? 6 : 4}>
+                <Grid key={peersRef.current[index].peerId} item xs={mobile ? 6 : 4}>
                   <Video
                     key={peersRef.current[index].peerId}
                     peer={peer.peerObj}
@@ -229,6 +235,7 @@ const ChatRoom = (props) => {
         </Box>
       </div>
       <Button
+        onClick={handleOnClick}
         style={{
           position: 'absolute',
           left: mobile ? '91%' : '93%',
@@ -241,10 +248,14 @@ const ChatRoom = (props) => {
         }}>
         <ImPhoneHangUp style={{ color: 'white', width: '50px', height: '30px' }} />
       </Button>
-    </div>
+    </div >
   );
 
   return <Layout drawer={drawer}>{main}</Layout>;
 };
+
+ChatRoom.propTypes = {
+  match: PropTypes.object.isRequired,
+}
 
 export default ChatRoom;
