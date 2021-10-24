@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {Link, useHistory} from 'react-router-dom';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -13,6 +13,7 @@ import {useAuth} from '../lib/hooks/useAuth';
 function Signin() {
   const classes = useStyles();
   const history = useHistory();
+  const handleOnClick = useCallback(() => history.push('/home'), [history]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {loading, error, token, dispatchSignin} = useAuth();
@@ -22,7 +23,7 @@ function Signin() {
       toast.error('Signin failed');
     }
     if (token) {
-      history.push('/home');
+      handleOnClick();
     }
   }, [error, token]);
 

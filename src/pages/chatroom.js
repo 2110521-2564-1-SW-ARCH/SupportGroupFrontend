@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import io from 'socket.io-client';
+import Peer from 'simple-peer';
+import * as Chance from 'chance';
+import PropTypes from "prop-types";
+import { useHistory } from 'react-router-dom';
 
 import { useSelector } from 'react-redux'
 
@@ -17,18 +22,34 @@ import { ChatBox } from '../components/chat/chatbox';
 import { Profile } from '../components/profile';
 import { AudioProfile } from '../components/audio/audioprofile';
 
+import Video from '../components/video';
+
 import { User } from '../chat_pb';
 import { ChatServiceClient } from '../chat_grpc_web_pb';
 
+const chance = new Chance();
+
 export const client = new ChatServiceClient('http://localhost:8080', null, null);
 
-function ChatRoom() {
+const ChatRoom = ({ match: { params: roomId } }) => {
   const classes = useStyles();
+
+  const history = useHistory();
+  const handleOnClick = useCallback(() => history.push('/'), [history]);
 
   const email = useSelector((state) => state.auth.email)
 
-  const [mobile, setMobile] = useState(false);
+  const userDetails = {
+    id: chance.guid(),
+    name: email,
+  };
+  const [peers, setPeers] = useState([]);
 
+  const socketRef = useRef();
+  const refVideo = useRef();
+  const peersRef = useRef([]);
+
+  const [mobile, setMobile] = useState(false);
   useEffect(() => {
     function handleResize() {
       if (window.innerWidth < 960) {
@@ -40,8 +61,115 @@ function ChatRoom() {
     window.addEventListener('resize', handleResize);
   });
 
+  function createPeer(userToSignal, callerId, stream) {
+    const peer = new Peer({
+      initiator: true,
+      trickle: false,
+      stream,
+    });
+
+    peer.on('signal', (signal) => {
+      socketRef.current.emit('initiate-signal', {
+        userToSignal,
+        callerId,
+        signal,
+      });
+    });
+
+    return peer;
+  }
+
+  function addPeer(incomingSignal, callerId, stream) {
+    const peer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream,
+    });
+
+    peer.on('signal', (signal) => {
+      socketRef.current.emit('ack-signal', { signal, callerId });
+    });
+
+    peer.signal(incomingSignal);
+
+    return peer;
+  }
+
+  useEffect(() => {
+    navigator.mediaDevices
+      .getUserMedia({ video: false, audio: true })
+      .then((stream) => {
+        refVideo.current.srcObject = stream;
+
+        socketRef.current = io.connect("http://localhost:5000");
+
+        // sending the user details and roomid to join in the room
+        socketRef.current.emit('join-room', roomId, userDetails);
+
+        socketRef.current.on('users-present-in-room', (users) => {
+          const peers = [];
+
+          // To all users who are already in the room initiating a peer connection
+          users.forEach((user) => {
+            const peer = createPeer(
+              user.socketId,
+              socketRef.current.id,
+              stream
+            );
+
+            peersRef.current.push({
+              peerId: user.socketId,
+              peer,
+              name: user.name,
+            });
+
+            peers.push({
+              peerId: user.socketId,
+              peerObj: peer,
+            });
+          });
+
+          setPeers(peers);
+        });
+
+        // once the users initiate signal we will call add peer
+        // to acknowledge the signal and send the stream
+        socketRef.current.on('user-joined', (payload) => {
+          const peer = addPeer(payload.signal, payload.callerId, stream);
+          peersRef.current.push({
+            peerId: payload.callerId,
+            peer,
+            name: payload.name,
+          });
+
+          setPeers((users) => [
+            ...users,
+            { peerId: payload.callerId, peerObj: peer },
+          ]);
+        });
+
+        // once the signal is accepted calling the signal with signal
+        // from other user so that stream can flow between peers
+        socketRef.current.on('signal-accepted', (payload) => {
+          const item = peersRef.current.find((p) => p.peerId === payload.id);
+          item.peer.signal(payload.signal);
+        });
+
+        // if some user is disconnected removing his references.
+        socketRef.current.on('user-disconnected', (payload) => {
+          const item = peersRef.current.find((p) => p.peerId === payload);
+          if (item) {
+            item.peer.destroy();
+            peersRef.current = peersRef.current.filter(
+              (p) => p.peerId !== payload
+            );
+          }
+          setPeers((users) => users.filter((p) => p.peerId !== payload));
+        });
+      });
+  }, []);
+
   const joinChatHandler = () => {
-    // eslint-disable-next-line no-underscore-dangle
     const _username = email;
 
     const user = new User();
@@ -84,27 +212,30 @@ function ChatRoom() {
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={mobile ? 0 : 12}>
             <Grid item xs={mobile ? 6 : 4}>
-              <AudioProfile />
+              <AudioProfile displayName={email} />
             </Grid>
-            <Grid item xs={mobile ? 6 : 4}>
-              <AudioProfile />
-            </Grid>
-            <Grid item xs={mobile ? 6 : 4}>
-              <AudioProfile />
-            </Grid>
-            <Grid item xs={mobile ? 6 : 4}>
-              <AudioProfile />
-            </Grid>
-            <Grid item xs={mobile ? 6 : 4}>
-              <AudioProfile />
-            </Grid>
-            <Grid item xs={mobile ? 6 : 4}>
-              <AudioProfile />
-            </Grid>
+
+            {peers.map((peer, index) => {
+              return (
+                <Grid key={peersRef.current[index].peerId} item xs={mobile ? 6 : 4}>
+                  <Video
+                    key={peersRef.current[index].peerId}
+                    peer={peer.peerObj}
+                    name={peersRef.current[index].name}
+                  />
+                </Grid>
+              );
+            })}
+            <div style={{
+              position: "absolute"
+            }}>
+              <video muted ref={refVideo} autoPlay playsInline />
+            </div>
           </Grid>
         </Box>
       </div>
       <Button
+        onClick={handleOnClick}
         style={{
           position: 'absolute',
           left: mobile ? '91%' : '93%',
@@ -117,10 +248,14 @@ function ChatRoom() {
         }}>
         <ImPhoneHangUp style={{ color: 'white', width: '50px', height: '30px' }} />
       </Button>
-    </div>
+    </div >
   );
 
   return <Layout drawer={drawer}>{main}</Layout>;
+};
+
+ChatRoom.propTypes = {
+  match: PropTypes.object.isRequired,
 }
 
 export default ChatRoom;
