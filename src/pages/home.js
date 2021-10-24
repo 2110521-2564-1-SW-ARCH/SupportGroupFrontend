@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, {useState, useEffect} from 'react';
-
+import {useHistory} from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 
 import MenuItem from '@mui/material/MenuItem';
@@ -20,6 +20,8 @@ import Input from '../components/input';
 import {subscribe} from '../utils/socket-api';
 
 function Home() {
+  const history = useHistory();
+
   const classes = useStyles();
   const {token} = useAuth();
 
@@ -37,6 +39,7 @@ function Home() {
         if (result.joinerList) {
           if (result.joinerList.includes(token)) {
             setSocket(result);
+            history.push(`/chat/${result.roomID}`);
           }
         }
       }
@@ -121,7 +124,7 @@ function Home() {
             </Button>
           )}
 
-          {socket?.roomID || ''}
+          {/* {socket?.roomID || ''} */}
         </FormControl>
       </div>
     </div>
