@@ -1,9 +1,10 @@
-const AUTH_TOKEN = 'auth_token';
+const AUTH_TOKEN = 'token';
 const CURRENT_USER = 'current_user';
 const APPLE_ENV = 'apple_env';
 const LOCATION = 'location';
 
 export const getAuthToken = () => {
+  console.log(localStorage.getItem(AUTH_TOKEN))
   return localStorage.getItem(AUTH_TOKEN);
 };
 
