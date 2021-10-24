@@ -10,6 +10,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 
 import {useStyles} from '../styles/styles';
+import {useAuth} from '../lib/hooks/useAuth';
 
 import {signin} from '../redux/auth/action';
 
@@ -20,17 +21,25 @@ import {subscribe} from '../utils/socket-api';
 
 function Home() {
   const classes = useStyles();
+  const {token} = useAuth();
 
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [category, setCategory] = useState('');
+  const [isMatchmaking, setIsMatchmaking] = useState(false);
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     subscribe((result) => {
-      setSocket(result);
+      if (result) {
+        if (result.joinerList) {
+          if (result.joinerList.includes(token)) {
+            setSocket(result);
+          }
+        }
+      }
     });
   });
 
@@ -44,6 +53,7 @@ function Home() {
     try {
       const params = new URLSearchParams();
       params.append('category', category);
+      params.append('token', token);
       const res = await fetch('http://localhost:5555/api/queue', {
         method: 'POST',
         body: params,
@@ -51,6 +61,26 @@ function Home() {
       const response = await res.json();
       const message = await response.message;
       console.log(message);
+      setIsMatchmaking(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCancel = async (event) => {
+    event.preventDefault();
+    try {
+      const params = new URLSearchParams();
+      params.append('category', category);
+      params.append('token', token);
+      const res = await fetch('http://localhost:5555/api/queue', {
+        method: 'DELETE',
+        body: params,
+      });
+      const response = await res.json();
+      const message = await response.message;
+      console.log(message);
+      setIsMatchmaking(false);
     } catch (error) {
       console.log(error);
     }
@@ -75,15 +105,23 @@ function Home() {
             onChange={handleCategory}
             label="Category"
             style={{backgroundColor: 'white', borderRadius: '5px', margin: '10px', paddingLeft: '10px'}}>
-            <MenuItem value={1}>First</MenuItem>
-            <MenuItem value={2}>Second</MenuItem>
-            <MenuItem value={3}>Third</MenuItem>
-            <MenuItem value={4}>Other</MenuItem>
+            <MenuItem value="Life">Life</MenuItem>
+            <MenuItem value="Study">Study</MenuItem>
+            <MenuItem value="Work">Work</MenuItem>
+            <MenuItem value="Love">Love</MenuItem>
+            <MenuItem value="Other">Other</MenuItem>
           </Select>
-          <Button variant="contained" onClick={handleSearchRoom} style={{margin: '10px', borderRadius: '5px'}}>
-            join room
-          </Button>
-          {socket || ''}
+          {isMatchmaking ? (
+            <Button variant="contained" onClick={handleCancel} style={{margin: '10px', borderRadius: '5px'}} color="secondary">
+              cancel
+            </Button>
+          ) : (
+            <Button variant="contained" onClick={handleSearchRoom} style={{margin: '10px', borderRadius: '5px'}}>
+              join room
+            </Button>
+          )}
+
+          {socket?.roomID || ''}
         </FormControl>
       </div>
     </div>
