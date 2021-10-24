@@ -13,7 +13,7 @@ import { useAuth } from '../lib/hooks/useAuth';
 function Signin() {
   const classes = useStyles();
   const history = useHistory();
-  const handleOnClick = useCallback(() => history.push('/chat/123'), [history]);
+  const handleOnClick = useCallback(() => history.push('/home'), [history]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { loading, error, token, dispatchSignin } = useAuth();
@@ -23,7 +23,7 @@ function Signin() {
       toast.error('Signin failed');
     }
     if (token) {
-      handleOnClick()
+      handleOnClick();
     }
   }, [error, token]);
 

@@ -96,10 +96,12 @@ const ChatRoom = ({ match: { params: roomId } }) => {
   }
 
   useEffect(() => {
+    let tracks
     navigator.mediaDevices
       .getUserMedia({ video: false, audio: true })
       .then((stream) => {
         refVideo.current.srcObject = stream;
+        tracks = stream.getTracks();
 
         socketRef.current = io.connect("http://localhost:5000");
 
@@ -167,6 +169,8 @@ const ChatRoom = ({ match: { params: roomId } }) => {
           setPeers((users) => users.filter((p) => p.peerId !== payload));
         });
       });
+    // socketRef.current.emit('disconnect')
+    return () => { socketRef.current.disconnect(); tracks[0].stop() }
   }, []);
 
   const joinChatHandler = () => {
