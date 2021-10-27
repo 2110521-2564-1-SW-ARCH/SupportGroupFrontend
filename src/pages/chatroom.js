@@ -103,7 +103,7 @@ const ChatRoom = ({ match: { params: roomId } }) => {
         refVideo.current.srcObject = stream;
         tracks = stream.getTracks();
 
-        socketRef.current = io.connect("http://localhost:5000");
+        socketRef.current = io.connect("http://localhost:5010");
 
         // sending the user details and roomid to join in the room
         socketRef.current.emit('join-room', roomId, userDetails);
