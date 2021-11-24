@@ -133,7 +133,7 @@ function Home() {
   const main = (
     <>
       <img style={{ height: '105vh', zIndex: -1, filter: 'grayscale(20%)' }} src="/support-group.jpeg" alt="Support Group" />
-      <div style={{ position: 'absolute', left: '50%', top: '40vh', transform: 'translate(-50%, -50%)', color: 'white', fontSize: 80 }}>test</div>
+      {/* <div style={{ position: 'absolute', left: '50%', top: '40vh', transform: 'translate(-50%, -50%)', color: 'white', fontSize: 80 }}>test</div> */}
     </>
   );
 

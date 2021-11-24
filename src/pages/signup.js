@@ -148,7 +148,7 @@ function Signup() {
         src="/support-group.jpeg"
         alt="Support Group"
       />
-      <div style={{ position: 'absolute', left: '50%', top: '40vh', transform: 'translate(-50%, -50%)', color: 'white', fontSize: 80 }}>Welcome</div>
+      {/* <div style={{ position: 'absolute', left: '50%', top: '40vh', transform: 'translate(-50%, -50%)', color: 'white', fontSize: 80 }}>Welcome</div> */}
     </>
   );
 

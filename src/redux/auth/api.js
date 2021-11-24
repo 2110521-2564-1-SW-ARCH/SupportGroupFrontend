@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = "http://localhost:8000/"
+const baseUrl = "http://localhost:65000/"
 
 export const signUp = async (email, password) => {
     const res = await axios({
